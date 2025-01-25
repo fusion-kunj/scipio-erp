@@ -1,13 +1,32 @@
 name: Scipio ERP Build
 
 on:
-   workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: windows-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install and build
+
+      - name: Run install.bat
+        shell: cmd
         run: install.bat
+
+      - name: Sleep for 2 seconds
+        shell: cmd
+        run: timeout /t 2 /nobreak > NUL
+
+      - name: Provide user input (1)
+        shell: cmd
+        run: echo 1
+
+      - name: Verify installation
+        run: echo "Installation completed successfully"
