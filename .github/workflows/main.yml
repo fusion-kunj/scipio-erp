@@ -1,65 +1,43 @@
 name: Scipio ERP Build
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install Dependencies
-      run: ant build
+    - name: Set up Java 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'adoptopenjdk'
 
-    - name: Option Selection
-      id: option-selection
+    - name: Install Apache Ant
+      run: choco install ant -y
+
+    - name: Verify Installation
       run: |
-        echo "Select build option:"
-        echo "1. Install for development"
-        echo "2. Install for production"
-        echo "3. Recompile"
-        echo "4. List compiler information"
-        set /p input="Enter a number (1-4): "
-        if "%input%" == "1" (
-          echo Running development install...
-          ant build load-demo
-        ) else if "%input%" == "2" (
-          echo Running production install...
-          ant build load-extseed create-admin-user-login
-        ) else if "%input%" == "3" (
-          echo Recompiling project...
-          ant build
-        ) else if "%input%" == "4" (
-          echo Listing compiler information...
-          ant -p
-        ) else (
-          echo Invalid option. Please select a valid number.
-          exit 1
-        )
+        java -version
+        ant -version
 
-    - name: Upload build artifacts
-      if: ${{ success() }}
+    - name: Build and Install (Development Mode)
+      run: ant build load-demo
+
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: scipio-erp-build
         path: target/*.jar
 
-    - name: Clean up
-      run: echo "Build process complete."
-
-  quit:
-    runs-on: self-hosted
-    needs: build
-    if: failure()
-    steps:
-    - name: Thank You Message
-      run: |
-        echo "==============THANK YOU=============="
-        echo "To start the application, type:"
-        echo "Linux: ./start.sh"
-        echo "OS X: bash ./start.sh"
-        echo "Windows: start.bat"
-        echo "Press any key to continue."
+    - name: Cleanup
+      run: echo "Installation completed successfully"
