@@ -13,11 +13,7 @@ jobs:
 
       - name: Run install.bat
         shell: cmd
-        run: install.bat
-
-      - name: Provide user input (1)
-        shell: cmd
-        run: 1
+        run: echo 1 | install.bat
 
       - name: Verify installation
         run: echo "Installation completed successfully"
