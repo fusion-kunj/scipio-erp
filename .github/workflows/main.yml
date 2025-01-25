@@ -17,7 +17,7 @@ jobs:
 
       - name: Provide user input (1)
         shell: cmd
-        run: echo 1
+        run: 1
 
       - name: Verify installation
         run: echo "Installation completed successfully"
