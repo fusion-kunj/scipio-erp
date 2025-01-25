@@ -6,24 +6,8 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Verify Installation
-      run: |
-        java -version
-        ant -version
-
-    - name: Build and Install (Development Mode)
-      run: ant build load-demo
-
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: scipio-erp-build
-        path: target/*.jar
-
-    - name: Cleanup
-      run: echo "Installation completed successfully"
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install and build
+        run: install.bat
