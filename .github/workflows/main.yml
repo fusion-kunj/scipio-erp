@@ -15,10 +15,6 @@ jobs:
         shell: cmd
         run: install.bat
 
-      - name: Sleep for 2 seconds
-        shell: cmd
-        run: timeout /t 2 /nobreak > NUL
-
       - name: Provide user input (1)
         shell: cmd
         run: echo 1
